@@ -1,0 +1,1070 @@
+
+/* =========================================
+   GEOSEARCH — ELECTRIC COMMAND CENTRE
+   Responsive desktop, tablet and mobile
+========================================= */
+
+/* 1. GLOBAL SETTINGS */
+
+:root {
+    --bg-main: #070d19;
+    --bg-card: #101e35;
+    --bg-card-light: #142744;
+    --bg-input: #081426;
+
+    --electric-blue: #2563eb;
+    --cyan: #38bdf8;
+    --cyan-light: #7dd3fc;
+    --purple: #6366f1;
+
+    --text-main: #eaf6ff;
+    --text-secondary: #a9bad0;
+    --border: rgba(56, 189, 248, 0.24);
+
+    --glow-blue: 0 0 20px rgba(56, 189, 248, 0.16);
+    --radius: 14px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(
+            ellipse at 10% 0%,
+            rgba(14, 165, 233, 0.13),
+            transparent 35%
+        ),
+        radial-gradient(
+            ellipse at 90% 20%,
+            rgba(99, 102, 241, 0.10),
+            transparent 35%
+        ),
+        var(--bg-main);
+
+    color: var(--text-main);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 1500px;
+    margin: auto;
+}
+
+main {
+    width: 100%;
+    max-width: 1350px;
+    margin: auto;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+button,
+select {
+    cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--cyan-light);
+    outline-offset: 3px;
+}
+
+/* 2. HEADER */
+
+header {
+    position: relative;
+    overflow: hidden;
+
+    background: linear-gradient(
+        120deg,
+        #0b1930,
+        #102c50,
+        #102044
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 0 25px rgba(14, 165, 233, 0.12),
+        inset 0 0 25px rgba(56, 189, 248, 0.035);
+}
+
+header h1 {
+    color: var(--cyan);
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+
+    text-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+}
+
+header p {
+    color: #a9c5df;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 3. GENERAL SECTIONS */
+
+section {
+    min-width: 0;
+    padding: 22px;
+    margin-bottom: 20px;
+
+    background: linear-gradient(
+        145deg,
+        rgba(17, 28, 48, 0.97),
+        rgba(10, 21, 39, 0.98)
+    );
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.20);
+
+    transition: border-color 0.25s ease;
+}
+
+section:hover {
+    border-color: rgba(56, 189, 248, 0.36);
+}
+
+h2 {
+    color: #e2f2ff;
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+section p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* 4. COMMON BUTTON DESIGN */
+
+button {
+    min-height: 46px;
+    padding: 12px 20px;
+
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+
+    background: linear-gradient(
+        120deg,
+        #0284c7,
+        #2563eb
+    );
+
+    border: 1px solid rgba(125, 211, 252, 0.55);
+    border-radius: 9px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, 0.30),
+        0 0 35px rgba(37, 99, 235, 0.12);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 5. SEARCH SECTION */
+
+.search-section input {
+    width: 100%;
+    max-width: 450px;
+    min-height: 46px;
+
+    padding: 12px 15px;
+
+    background: var(--bg-input);
+    color: white;
+
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    border-radius: 9px;
+
+    outline: none;
+    font-size: 15px;
+
+    transition: 0.2s ease;
+}
+
+.search-section input::placeholder {
+    color: #8298b1;
+}
+
+.search-section input:focus {
+    border-color: var(--cyan);
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.12),
+        0 0 15px rgba(56, 189, 248, 0.12);
+}
+
+.search-section button {
+    margin-left: 8px;
+
+    background: linear-gradient(
+        120deg,
+        #0284c7,
+        #2563eb,
+        #4f46e5
+    );
+}
+
+#searchMessage,
+#areaMessage {
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* 6. SEARCH AREA CONTROLS */
+
+#selectAreaButton {
+    margin: 5px 8px 12px 0;
+
+    background: linear-gradient(
+        120deg,
+        #0284c7,
+        #2563eb,
+        #4f46e5
+    );
+
+    border-color: var(--cyan-light);
+}
+
+#generateGridButton {
+    margin: 5px 8px 12px 0;
+
+    background: linear-gradient(
+        120deg,
+        #4338ca,
+        #6366f1,
+        #2563eb
+    );
+
+    border-color: #818cf8;
+}
+
+#generateGridButton:disabled {
+    background: #334155;
+    border-color: #475569;
+    color: #94a3b8;
+    box-shadow: none;
+    transform: none;
+}
+
+/* 7. DASHBOARD SECTION */
+
+.dashboard-section {
+    margin-bottom: 25px;
+    padding: 22px;
+
+    background: linear-gradient(
+        145deg,
+        #101e35,
+        #091528
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.38);
+    border-radius: 16px;
+
+    box-shadow:
+        0 0 28px rgba(14, 165, 233, 0.08),
+        0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* Dashboard heading */
+
+.dashboard-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.dashboard-heading h2 {
+    color: var(--cyan);
+    font-size: 25px;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+}
+
+.dashboard-heading p,
+.dashboard-map-heading p {
+    color: #94a3b8;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Live indicator */
+
+.dashboard-live {
+    color: var(--cyan);
+
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid #0ea5e9;
+
+    padding: 8px 13px;
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+
+    box-shadow: 0 0 14px rgba(14, 165, 233, 0.15);
+}
+
+/* 8. DASHBOARD STATISTICS */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.dashboard-stat {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+
+    padding: 18px;
+
+    background: linear-gradient(
+        145deg,
+        #132746,
+        #0b172b
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 12px;
+
+    box-shadow: inset 0 0 18px rgba(56, 189, 248, 0.025);
+
+    transition: 0.25s ease;
+}
+
+.dashboard-stat:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--cyan);
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, 0.18),
+        inset 0 0 15px rgba(56, 189, 248, 0.06);
+}
+
+.dashboard-stat span {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.dashboard-stat h3 {
+    color: var(--cyan);
+    font-size: 31px;
+    margin-top: 9px;
+
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+/* 9. DASHBOARD FILTERS */
+
+.dashboard-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.dashboard-filters label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.dashboard-filters select {
+    width: 100%;
+    min-height: 44px;
+    padding: 11px 12px;
+
+    color: #f8fafc;
+    background: var(--bg-input);
+
+    border: 1px solid #334e6d;
+    border-radius: 8px;
+
+    outline: none;
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+.dashboard-filters select:focus {
+    border-color: var(--cyan);
+
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+}
+
+/* 10. DASHBOARD MAP */
+
+.dashboard-map-heading {
+    margin-bottom: 13px;
+}
+
+.dashboard-map-heading h3 {
+    color: #e2e8f0;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+#dashboardMap {
+    width: 100%;
+    height: 420px;
+    min-height: 320px;
+
+    border: 1px solid rgba(56, 189, 248, 0.55);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 1;
+
+    box-shadow:
+        0 0 20px rgba(14, 165, 233, 0.10),
+        inset 0 0 15px rgba(14, 165, 233, 0.04);
+}
+
+/* Match the updated HTML ID */
+
+#dashboardMessage {
+    color: var(--cyan);
+    font-size: 12px;
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+/* 11. MAIN LEAFLET MAP */
+
+#map {
+    width: 100%;
+    height: 520px;
+    min-height: 320px;
+
+    border: 1px solid rgba(56, 189, 248, 0.55);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 1;
+
+    box-shadow:
+        0 0 20px rgba(14, 165, 233, 0.10),
+        inset 0 0 15px rgba(14, 165, 233, 0.04);
+}
+
+.leaflet-container {
+    cursor: grab;
+    background: #0b1628;
+}
+
+.leaflet-container:active {
+    cursor: grabbing;
+}
+
+/* Leaflet zoom controls */
+
+.leaflet-control-zoom a {
+    background: #10243e !important;
+    color: var(--cyan) !important;
+    border-color: #315071 !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background: #1b3b60 !important;
+    color: white !important;
+}
+
+/* Leaflet popup styling */
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background: #101e35;
+    color: #e2e8f0;
+}
+
+.leaflet-popup-content {
+    line-height: 1.6;
+}
+
+.leaflet-container a {
+    color: var(--cyan);
+}
+
+/* 12. GRID LABELS */
+
+.grid-label {
+    background: transparent;
+    border: none;
+}
+
+.grid-label span {
+    display: block;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #075985,
+        #1d4ed8
+    );
+
+    border: 1px solid var(--cyan-light);
+    border-radius: 5px;
+
+    padding: 4px 7px;
+
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+/* 13. GRID REFERENCE GUIDE */
+
+#grid-guide {
+    background: #111c30;
+    border: 1px solid var(--border);
+}
+
+#gridGuideContainer {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.grid-guide-item {
+    min-width: 0;
+    padding: 15px;
+
+    background: linear-gradient(
+        145deg,
+        #172d4b,
+        #101d33
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 10px;
+
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.grid-guide-item:hover {
+    transform: translateY(-3px);
+
+    border-color: var(--cyan);
+
+    box-shadow: 0 0 17px rgba(56, 189, 248, 0.16);
+}
+
+.grid-guide-item strong {
+    display: block;
+    color: var(--cyan);
+    font-size: 18px;
+}
+
+.grid-guide-item span {
+    display: block;
+    color: #cbd5e1;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* 14. SECTOR CONTROLS */
+
+.sector-status,
+.sector-team {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+
+    margin-top: 9px;
+    padding: 8px;
+
+    color: white;
+    background: var(--bg-input);
+
+    border: 1px solid #475569;
+    border-radius: 7px;
+
+    font-size: 13px;
+}
+
+.sector-status:focus,
+.sector-team:focus {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+.sector-team {
+    background: #172554;
+    border-color: #8b5cf6;
+}
+
+/* 15. SECTOR DETAILS PANEL */
+
+.sector-details-panel {
+    margin-top: 12px;
+    padding: 16px;
+
+    background: linear-gradient(
+        145deg,
+        #101e35,
+        #0b1528
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 14px;
+
+    box-shadow: var(--glow-blue);
+    transition: border-color 0.2s ease;
+}
+
+.sector-details-panel[hidden] {
+    display: none;
+}
+
+.sector-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.sector-panel-header h3 {
+    color: var(--cyan);
+    font-size: 18px;
+    margin: 0;
+}
+
+#closeSectorPanel {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    padding: 0;
+
+    background: #1e293b;
+    color: #e2e8f0;
+
+    border: 1px solid #334155;
+    border-radius: 8px;
+
+    font-size: 22px;
+}
+
+#closeSectorPanel:hover {
+    background: #334155;
+    color: var(--cyan);
+}
+
+.sector-details-panel label {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 10px 0 6px;
+}
+
+.sector-details-panel select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+
+    background: var(--bg-input);
+    color: #e2e8f0;
+
+    border: 1px solid #334155;
+    border-radius: 8px;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.sector-details-panel select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+}
+
+#sectorPanelMessage {
+    color: var(--cyan);
+    font-size: 12px;
+    margin: 12px 0 0;
+}
+
+/* 16. LOCATION INFORMATION */
+
+.info-card {
+    background: linear-gradient(
+        145deg,
+        #172943,
+        #101d33
+    );
+
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.info-card h3 {
+    color: var(--cyan);
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+
+.info-card p {
+    color: #cbd5e1;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.info-card strong {
+    color: white;
+}
+
+/* 17. TABLET RESPONSIVENESS */
+
+@media (max-width: 900px) {
+
+    body {
+        padding: 14px;
+    }
+
+    #map {
+        height: 450px;
+    }
+
+    #dashboardMap {
+        height: 380px;
+    }
+
+    #gridGuideContainer {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* 18. MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 8px;
+    }
+
+    .container,
+    main {
+        width: 100%;
+    }
+
+    header {
+        padding: 16px;
+        margin-bottom: 13px;
+        border-radius: 12px;
+    }
+
+    header h1 {
+        font-size: 27px;
+    }
+
+    header p {
+        font-size: 12px;
+    }
+
+    section {
+        padding: 14px;
+        margin-bottom: 13px;
+        border-radius: 12px;
+    }
+
+    h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    /* Search controls */
+
+    .search-section input {
+        display: block;
+        width: 100%;
+        max-width: none;
+        margin: 0 0 9px;
+    }
+
+    .search-section button {
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+
+    /* Search area buttons */
+
+    #selectAreaButton,
+    #generateGridButton {
+        display: block;
+        width: 100%;
+        margin: 9px 0;
+    }
+
+    button {
+        min-height: 48px;
+    }
+
+    /* Dashboard */
+
+    .dashboard-section {
+        padding: 14px;
+        border-radius: 13px;
+    }
+
+    .dashboard-heading {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .dashboard-heading h2 {
+        font-size: 20px;
+    }
+
+    .dashboard-heading p {
+        font-size: 12px;
+    }
+
+    .dashboard-live {
+        padding: 6px 9px;
+        font-size: 10px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .dashboard-stat {
+        padding: 13px;
+        border-radius: 11px;
+    }
+
+    .dashboard-stat span {
+        font-size: 11px;
+    }
+
+    .dashboard-stat h3 {
+        font-size: 24px;
+    }
+
+    .dashboard-filters {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .dashboard-map-heading h3 {
+        font-size: 16px;
+    }
+
+    /* Maps */
+
+    #map {
+        height: 55vh;
+        min-height: 340px;
+        max-height: 470px;
+        border-radius: 11px;
+    }
+
+    #dashboardMap {
+        height: 340px;
+        min-height: 300px;
+        border-radius: 11px;
+    }
+
+    /* Grid guide */
+
+    #gridGuideContainer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        margin-top: 14px;
+    }
+
+    .grid-guide-item {
+        padding: 12px 8px;
+        border-radius: 9px;
+    }
+
+    .grid-guide-item strong {
+        font-size: 16px;
+    }
+
+    .grid-guide-item span {
+        font-size: 12px;
+    }
+
+    .sector-status,
+    .sector-team {
+        min-height: 46px;
+        font-size: 13px;
+        padding: 8px 5px;
+    }
+
+    /* Sector panel */
+
+    .sector-details-panel {
+        margin-top: 10px;
+        padding: 13px;
+        border-radius: 12px;
+    }
+
+    .sector-panel-header {
+        margin-bottom: 10px;
+    }
+
+    .sector-panel-header h3 {
+        font-size: 16px;
+    }
+
+    .sector-details-panel label {
+        margin-top: 9px;
+    }
+
+    .sector-details-panel select {
+        min-height: 46px;
+        font-size: 14px;
+    }
+
+    #sectorPanelMessage {
+        font-size: 12px;
+    }
+
+    /* Location information */
+
+    .info-card {
+        padding: 14px;
+    }
+
+    .info-card h3 {
+        font-size: 18px;
+    }
+
+    .info-card p {
+        font-size: 13px;
+    }
+}
+
+/* 19. VERY SMALL PHONES */
+
+@media (max-width: 360px) {
+
+    body {
+        padding: 6px;
+    }
+
+    header {
+        padding: 13px;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    section {
+        padding: 11px;
+    }
+
+    .dashboard-heading {
+        flex-direction: column;
+    }
+
+    .dashboard-stat {
+        padding: 10px;
+    }
+
+    .dashboard-stat h3 {
+        font-size: 20px;
+    }
+
+    #map {
+        height: 330px;
+        min-height: 300px;
+    }
+
+    #dashboardMap {
+        height: 300px;
+    }
+
+    .grid-guide-item {
+        padding: 10px 5px;
+    }
+}
+
+/* 20. REDUCED MOTION ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
