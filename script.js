@@ -233,6 +233,10 @@ const statusColors = {
 
 let currentOperation = null;
 
+const caseOperations = JSON.parse(
+    localStorage.getItem("geosearch_case_operations") || "{}"
+);
+
 
 const DEPARTMENT_NAMES = {
 
@@ -254,8 +258,7 @@ const DEPARTMENT_NAMES = {
 // =============================================
 
 function getCurrentOperationStatus() {
-
-    if (!currentOperation) {
+        if (!currentOperation) {
         return "none";
     }
 
@@ -371,176 +374,173 @@ function updateDashboardStats() {
 // 9. DASHBOARD MAP UPDATE
 // =============================================
 
+
 function updateDashboardMap() {
 
     // Clear previous operation layers
-
     dashboardOperationLayers.clearLayers();
 
-
-    // Always refresh statistics
-
+    // Refresh statistics
     updateDashboardStats();
 
-
     // Check operation availability
-
     if (!currentOperation) {
-
         dashboardMapMessage.textContent =
             "No search operations have been registered yet.";
-
         return;
-
     }
 
+    // Check whether bounds exist
+    const bounds = currentOperation.bounds;
 
-    // DEPARTMENT FILTER
+    if (
+        !bounds ||
+        !Number.isFinite(Number(bounds.south)) ||
+        !Number.isFinite(Number(bounds.west)) ||
+        !Number.isFinite(Number(bounds.north)) ||
+        !Number.isFinite(Number(bounds.east))
+    ) {
+        dashboardMapMessage.textContent =
+            "Search area coordinates are incomplete.";
 
-    const selectedDepartment =
-        departmentFilter.value;
+        console.error(
+            "Invalid operation bounds:",
+            currentOperation.bounds
+        );
 
+        return;
+    }
+
+    // Convert coordinates into numbers
+    const south = Number(bounds.south);
+    const west = Number(bounds.west);
+    const north = Number(bounds.north);
+    const east = Number(bounds.east);
+
+    // Validate coordinate ranges and ordering
+    if (
+        south < -90 || south > 90 ||
+        north < -90 || north > 90 ||
+        west < -180 || west > 180 ||
+        east < -180 || east > 180 ||
+        south >= north ||
+        west >= east
+    ) {
+        dashboardMapMessage.textContent =
+            "Search area coordinates are invalid.";
+
+        console.error("Invalid coordinate values:", bounds);
+        return;
+    }
+
+    // Department filter
+    const selectedDepartment = departmentFilter.value;
 
     if (
         selectedDepartment !== "all" &&
         selectedDepartment !== currentOperation.department
     ) {
-
         dashboardMapMessage.textContent =
             "No operations found for this department.";
-
         return;
-
     }
 
-
-    // OPERATION STATUS FILTER
-
-    const selectedStatus =
-        operationStatusFilter.value;
-
-
-    const currentStatus =
-        getCurrentOperationStatus();
-
+    // Operation status filter
+    const selectedStatus = operationStatusFilter.value;
+    const currentStatus = getCurrentOperationStatus();
 
     if (
         selectedStatus !== "all" &&
         selectedStatus !== currentStatus
     ) {
-
         dashboardMapMessage.textContent =
             "No operations found for this status.";
-
         return;
-
     }
 
-
-    // DISPLAY OPERATION MESSAGE
-
+    // Display operation message
     dashboardMapMessage.textContent =
         "Displaying registered search operation.";
 
-
-    const bounds =
-        currentOperation.bounds;
-
-
-    // DRAW OPERATION BOUNDARY
-
-    const operationBoundary = L.rectangle(bounds, {
-
-        color: "#38bdf8",
-
-        weight: 3,
-
-        fillColor: "#38bdf8",
-
-        fillOpacity: 0.12
-
-    });
-
-
-    operationBoundary.bindPopup(
-
-        `<strong>Search Operation</strong><br>
-        Department: ${DEPARTMENT_NAMES[currentOperation.department]}`
-
+    // Create valid Leaflet bounds
+    const operationBounds = L.latLngBounds(
+        [south, west],
+        [north, east]
     );
 
+    // Draw operation boundary
+    const operationBoundary = L.rectangle(operationBounds, {
+        color: "#38bdf8",
+        weight: 3,
+        fillColor: "#38bdf8",
+        fillOpacity: 0.12
+    });
+
+    operationBoundary.bindPopup(`
+        <strong>Search Operation</strong><br>
+        Department: ${
+            DEPARTMENT_NAMES[currentOperation.department] ||
+            currentOperation.department
+        }
+    `);
 
     dashboardOperationLayers.addLayer(operationBoundary);
 
+    // Display generated sectors
+    (currentOperation.cells || []).forEach((cell, index) => {
 
-    // DISPLAY GENERATED SECTORS
+        if (
+            !cell ||
+            !Number.isFinite(Number(cell.north)) ||
+            !Number.isFinite(Number(cell.south)) ||
+            !Number.isFinite(Number(cell.west)) ||
+            !Number.isFinite(Number(cell.east))
+        ) {
+            console.warn("Skipping invalid sector:", cell);
+            return;
+        }
 
-    currentOperation.cells.forEach((cell, index) => {
-
-        const row =
-            Math.floor(index / GRID_COLUMNS);
-
-        const column =
-            index % GRID_COLUMNS;
-
+        const row = Math.floor(index / GRID_COLUMNS);
+        const column = index % GRID_COLUMNS;
 
         const sectorLabel =
             String.fromCharCode(65 + row) + (column + 1);
 
-
         const status =
-            currentOperation.statuses[sectorLabel] ||
+            currentOperation.statuses?.[sectorLabel] ||
             "Not Searched";
 
-
         const color =
-            statusColors[status];
-
+            statusColors[status] || "#64748b";
 
         const sectorRectangle = L.rectangle(
-
             [
-                [cell.north, cell.west],
-                [cell.south, cell.east]
-            ],
+                [Number(cell.north), Number(cell.west)],
+                [Number(cell.south), Number(cell.east)]
+      ],
 
             {
-
                 color: color,
-
                 fillColor: color,
-
                 fillOpacity: 0.35,
-
                 weight: 2
-
             }
-
         );
 
-
-        sectorRectangle.bindPopup(
-
-            `<strong>Sector ${sectorLabel}</strong><br>
-            Status: ${status}`
-
-        );
-
+        sectorRectangle.bindPopup(`
+            <strong>Sector ${sectorLabel}</strong><br>
+            Status: ${status}
+        `);
 
         dashboardOperationLayers.addLayer(sectorRectangle);
-
     });
 
-
-    // FIT DASHBOARD MAP TO OPERATION
-
-    dashboardMap.fitBounds(bounds, {
-
+    // Fit dashboard map to operation
+    dashboardMap.fitBounds(operationBounds, {
         padding: [20, 20]
-
     });
-
 }
+
 
 
 // =============================================
@@ -565,83 +565,78 @@ operationStatusFilter.addEventListener("change", function() {
 // 11. COMPLETE SEARCH AREA
 // =============================================
 
+
 function completeSearchArea() {
 
     const bounds = L.latLngBounds(
-
         areaCorners[0],
-
         areaCorners[1]
-
     );
 
+    // Get the actual coordinate values
+    const southWest = bounds.getSouthWest();
+    const northEast = bounds.getNorthEast();
 
     // Remove previous search rectangle
-
     if (searchAreaRectangle !== null) {
-
         geoMap.removeLayer(searchAreaRectangle);
-
     }
 
-
     // Draw selected search area
-
     searchAreaRectangle = L.rectangle(bounds, {
-
         color: "#38bdf8",
-
         weight: 3,
-
         fillColor: "#38bdf8",
-
         fillOpacity: 0.15
-
     }).addTo(geoMap);
 
-
     // Enable grid generation
-
     generateGridButton.disabled = false;
 
-
     // Reset selection
-
     isSelectingArea = false;
-
     areaCorners = [];
 
-
-    selectAreaButton.textContent =
-        "Select Search Area";
-
+    selectAreaButton.textContent = "Select Search Area";
 
     areaMessage.textContent =
         "Search area selected successfully!";
 
-
     geoMap.fitBounds(bounds);
 
-
-    // Create current operation
-
+    // Create current operation with plain coordinate values
     currentOperation = {
-
         department: "police",
 
-        bounds: bounds,
+        bounds: {
+            south: southWest.lat,
+            west: southWest.lng,
+            north: northEast.lat,
+            east: northEast.lng
+        },
 
         cells: [],
-
-        statuses: sectorStatuses,
-
+        statuses: { ...sectorStatuses },
         status: "active"
-
     };
 
+    // Save demo operation data
+    if (activeDemoCaseId) {
 
+        caseOperations[activeDemoCaseId] = {
+            statuses: { ...sectorStatuses },
+            assignments: { ...sectorAssignments },
+            status: "active"
+        };
+
+        localStorage.setItem(
+            "geosearch_case_operations",
+            JSON.stringify(caseOperations)
+        );
+    }
+
+    // Refresh dashboard map
     updateDashboardMap();
-
 }
 
 
@@ -797,46 +792,38 @@ async function searchLocation() {
         }
 
 
-        // ADD NEW MARKER
+        // ADD NEW LOCATION MARKER
 
-        locationMarker = L.marker(
+        locationMarker = L.marker([
+            latitude,
+            longitude
+        ]).addTo(geoMap);
 
-            [latitude, longitude]
 
-        ).addTo(geoMap);
-
-
-        locationMarker
-
-            .bindPopup(
-                `<b>${data[0].display_name}</b>`
-            )
-
-            .openPopup();
+        locationMarker.bindPopup(
+            `<strong>${data[0].name || location}</strong>`
+        ).openPopup();
 
 
         searchMessage.textContent =
-            "Location found successfully!";
-
+            "Location found successfully.";
 
     } catch (error) {
 
-        console.error(
-            "Search error:",
-            error
-        );
-
+        console.error("Location search error:", error);
 
         searchMessage.textContent =
-            "Something went wrong. Check your internet connection.";
+            "Unable to search location. Please try again.";
 
     } finally {
 
-        searchButton.disabled = false;
-
-    }
+    searchButton.disabled = false;
 
 }
+}
+
+
+
 
 
 // =============================================
@@ -1044,263 +1031,202 @@ selectAreaButton.addEventListener("click", function() {
 // 18. GENERATE GRID
 // =============================================
 
+
+
 function generateGrid() {
 
     if (!searchAreaRectangle) {
-
-        alert(
-            "Please select a search area first."
-        );
-
+        alert("Please select a demo area first.");
         return;
-
     }
 
+    if (!activeDemoCaseId) {
+        alert("Please open a demo case first.");
+        return;
+    }
 
-    // REMOVE PREVIOUS GRID
-
-    gridCells.forEach(cell => {
-
-        geoMap.removeLayer(cell);
-
-    });
-
-
-    gridLabels.forEach(label => {
-
-        geoMap.removeLayer(label);
-
-    });
-
+    // Remove previous grid
+    gridCells.forEach(cell => geoMap.removeLayer(cell));
+    gridLabels.forEach(label => geoMap.removeLayer(label));
 
     gridCells = [];
-
     gridLabels = [];
 
-
-    // RESET SECTOR DATA
-
-    sectorStatuses = {};
-
-    sectorAssignments = {};
-
-
     sectorDetailsPanel.hidden = true;
-
     selectedSector = null;
 
+    // Get selected area bounds
+    const bounds = searchAreaRectangle.getBounds();
 
-    // GET SELECTED AREA BOUNDS
+    const north = bounds.getNorth();
+    const south = bounds.getSouth();
+    const east = bounds.getEast();
+    const west = bounds.getWest();
 
-    const bounds =
-        searchAreaRectangle.getBounds();
-
-
-    const north =
-        bounds.getNorth();
-
-    const south =
-        bounds.getSouth();
-
-    const east =
-        bounds.getEast();
-
-    const west =
-        bounds.getWest();
-
-
-    // CALCULATE CELL DIMENSIONS
-
-    const cellHeight =
-        (north - south) / GRID_ROWS;
-
-    const cellWidth =
-        (east - west) / GRID_COLUMNS;
-
+    // Calculate cell dimensions
+    const cellHeight = (north - south) / GRID_ROWS;
+    const cellWidth = (east - west) / GRID_COLUMNS;
 
     const generatedCoordinates = [];
 
+    // Calculate grid coordinates
+    for (let row = 0; row < GRID_ROWS; row++) {
 
-    // CALCULATE GRID COORDINATES
+        for (let column = 0; column < GRID_COLUMNS; column++) {
 
-    for (
-        let row = 0;
-        row < GRID_ROWS;
-        row++
-    ) {
+            const cellNorth = north - (row * cellHeight);
+            const cellSouth = cellNorth - cellHeight;
 
-        for (
-            let column = 0;
-            column < GRID_COLUMNS;
-            column++
-        ) {
-
-            const cellNorth =
-                north - (row * cellHeight);
-
-            const cellSouth =
-                cellNorth - cellHeight;
-
-
-            const cellWest =
-                west + (column * cellWidth);
-
-            const cellEast =
-                cellWest + cellWidth;
-
+            const cellWest = west + (column * cellWidth);
+            const cellEast = cellWest + cellWidth;
 
             generatedCoordinates.push({
-
                 north: cellNorth,
-
                 south: cellSouth,
-
                 east: cellEast,
-
                 west: cellWest
-
             });
-
         }
-
     }
 
-
-    // DRAW GRID CELLS
+    // Initialize sector data
+    sectorStatuses = {};
+    sectorAssignments = {};
 
     generatedCoordinates.forEach((cell, index) => {
 
-        const row =
-            Math.floor(index / GRID_COLUMNS);
-
-        const column =
-            index % GRID_COLUMNS;
-
-
-        const rowLabel =
-            String.fromCharCode(65 + row);
-
+        const row = Math.floor(index / GRID_COLUMNS);
+        const column = index % GRID_COLUMNS;
 
         const sectorLabel =
-            rowLabel + (column + 1);
+            String.fromCharCode(65 + row) + (column + 1);
 
-
-        // INITIAL SECTOR DATA
-
-        sectorStatuses[sectorLabel] =
-            "Not Searched";
-
-
-        sectorAssignments[sectorLabel] =
-            "Unassigned";
-
-
-        // CREATE SECTOR RECTANGLE
-
-        const rectangle = L.rectangle(
-
-            [
-                [cell.north, cell.west],
-
-                [cell.south, cell.east]
-            ],
-
-            {
-
-                color: statusColors["Not Searched"],
-
-                weight: 2,
-
-                fillColor: statusColors["Not Searched"],
-
-                fillOpacity: 0.30
-
-            }
-
-        ).addTo(geoMap);
-
-
-        gridCells.push(rectangle);
-
-
-        // SECTOR CLICK EVENT
-
-        rectangle.on("click", function() {
-
-            openSectorPanel(sectorLabel);
-
-        });
-
-
-        // CALCULATE SECTOR CENTRE
-
-        const centerLatitude =
-
-            (cell.north + cell.south) / 2;
-
-
-        const centerLongitude =
-
-            (cell.east + cell.west) / 2;
-
-
-        // CREATE SECTOR LABEL
-
-        const label = L.marker(
-
-            [centerLatitude, centerLongitude],
-
-            {
-
-                interactive: false,
-
-                icon: L.divIcon({
-
-                    className: "grid-label",
-
-                    html: `<span>${sectorLabel}</span>`,
-
-                    iconSize: [40, 24],
-
-                    iconAnchor: [20, 12]
-
-                })
-
-            }
-
-        ).addTo(geoMap);
-
-
-        gridLabels.push(label);
-
+        sectorStatuses[sectorLabel] = "Not Searched";
+        sectorAssignments[sectorLabel] = "Unassigned";
     });
 
-
-    // SAVE CURRENT OPERATION
-
+    // Save current operation
     currentOperation = {
-
         department: "police",
 
-        bounds: bounds,
+        bounds: {
+            north,
+            south,
+            east,
+            west
+        },
 
         cells: generatedCoordinates,
-
-        statuses: sectorStatuses,
-
+        statuses: { ...sectorStatuses },
+        assignments: { ...sectorAssignments },
         status: "active"
-
     };
 
+    // Draw grid immediately on main map
+    drawDemoGrid();
 
-    // UPDATE INTERFACE
-
+    // Refresh Grid Guide
     updateGridGuide();
 
+    // Refresh dashboard map
     updateDashboardMap();
+
+    // Save operation to active case
+    caseOperations[activeDemoCaseId] = {
+        ...currentOperation
+    };
+
+    localStorage.setItem(
+        "geosearch_case_operations",
+        JSON.stringify(caseOperations)
+    );
+
+    console.log("Grid generated successfully:", currentOperation);
 
 }
 
+
+
+function saveActiveDemoCase() {
+    if (!activeDemoCaseId || !currentOperation) return;
+
+    caseOperations[activeDemoCaseId] = {
+        department: currentOperation.department,
+        bounds: currentOperation.bounds,
+        cells: currentOperation.cells,
+        statuses: { ...sectorStatuses },
+        assignments: { ...sectorAssignments },
+        status: currentOperation.status
+    };
+
+    localStorage.setItem(
+        "geosearch_case_operations",
+        JSON.stringify(caseOperations)
+    );
+}
+
+
+function drawDemoGrid() {
+    gridCells.forEach(cell => geoMap.removeLayer(cell));
+    gridLabels.forEach(label => geoMap.removeLayer(label));
+
+    gridCells = [];
+    gridLabels = [];
+
+    if (!currentOperation) return;
+
+    currentOperation.cells.forEach((cell, index) => {
+        const row = Math.floor(index / GRID_COLUMNS);
+        const column = index % GRID_COLUMNS;
+
+        const label = String.fromCharCode(65 + row) + (column + 1);
+
+        const status = sectorStatuses[label] || "Not Searched";
+        const color = statusColors[status];
+
+        const rectangle = L.rectangle(
+            [
+                [cell.north, cell.west],
+                [cell.south, cell.east]
+            ],
+            {
+                color,
+                weight: 2,
+                fillColor: color,
+                fillOpacity: 0.30
+            }
+        ).addTo(geoMap);
+
+        rectangle.on("click", function () {
+            openSectorPanel(label);
+        });
+
+        gridCells.push(rectangle);
+
+        const centerLatitude = (cell.north + cell.south) / 2;
+        const centerLongitude = (cell.east + cell.west) / 2;
+
+        const marker = L.marker(
+            [centerLatitude, centerLongitude],
+            {
+                interactive: false,
+                icon: L.divIcon({
+                    className: "grid-label",
+                    html: `<span>${label}</span>`,
+                    iconSize: [40, 24],
+                    iconAnchor: [20, 12]
+                })
+            }
+        ).addTo(geoMap);
+
+        gridLabels.push(marker);
+    });
+
+    geoMap.fitBounds([
+    [currentOperation.bounds.north, currentOperation.bounds.west],
+    [currentOperation.bounds.south, currentOperation.bounds.east]
+]);
+}
 
 // =============================================
 // 19. GRID REFERENCE GUIDE
@@ -1748,3 +1674,712 @@ dashboardMapMessage.textContent =
 // =============================================
 // END OF GEOSEARCH JAVASCRIPT
 // =============================================
+
+
+
+
+
+// =====================================
+// SUPABASE CONNECTION
+// =====================================
+
+const SUPABASE_URL = "https://xalfxzxqjbpddifwjlzm.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GXGJAJiSv4j4JBhyCfvdPQ_nk0TjIce";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+console.log("Supabase client initialized successfully.");
+
+
+
+
+
+
+
+/* =====================================
+   GEOSEARCH - DEMO CASE MANAGEMENT
+===================================== */
+
+const caseCreateButton = document.getElementById("createCaseButton");
+const caseDialog = document.getElementById("createCaseDialog");
+const caseCloseButton = document.getElementById("closeCaseDialog");
+const caseCancelButton = document.getElementById("cancelCaseButton");
+const caseForm = document.getElementById("createCaseForm");
+const caseListContainer = document.getElementById("caseList");
+
+const demoCases =
+    JSON.parse(localStorage.getItem("geosearch_demo_cases")) || [];
+
+function openCaseDialog() {
+    caseDialog.showModal();
+}
+
+function closeCaseDialog() {
+    caseDialog.close();
+}
+
+
+function displayDemoCases() {
+    caseListContainer.replaceChildren();
+
+    if (demoCases.length === 0) {
+        const emptyMessage = document.createElement("p");
+        emptyMessage.textContent = "No demo cases created yet.";
+        caseListContainer.appendChild(emptyMessage);
+        return;
+    }
+
+    demoCases.forEach(function (demoCase) {
+        const card = document.createElement("article");
+        card.className = "demo-case-card";
+
+        const title = document.createElement("h3");
+        title.textContent = demoCase.name;
+
+        const description = document.createElement("p");
+        description.textContent =
+            demoCase.description || "No description provided.";
+
+        const visibility = document.createElement("span");
+        visibility.className = "case-visibility";
+        visibility.textContent =
+            demoCase.visibility === "public"
+                ? "PUBLIC DEMO"
+                : "PRIVATE DEMO";
+        const openButton = document.createElement("button");
+
+        openButton.type = "button";
+        openButton.className = "open-case-button";
+        openButton.textContent = "Open Case";
+        openButton.dataset.caseId = demoCase.id;
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete-case-button";
+        deleteButton.textContent = "Delete Case";
+        deleteButton.dataset.caseId = demoCase.id;
+
+        card.append(
+    title,
+    description,
+    visibility,
+    openButton,
+    deleteButton
+);
+        caseListContainer.appendChild(card);
+    });
+}
+
+caseCreateButton.addEventListener("click", openCaseDialog);
+
+caseCloseButton.addEventListener("click", closeCaseDialog);
+
+caseCancelButton.addEventListener("click", closeCaseDialog);
+
+
+caseForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const caseName = document
+        .getElementById("caseNameInput")
+        .value.trim();
+
+    const caseDescription = document
+        .getElementById("caseDescriptionInput")
+        .value.trim();
+
+    const caseVisibility = document
+        .getElementById("caseVisibilityInput")
+        .value;
+
+    if (!caseName) {
+        return;
+    }
+
+    // Generate a unique case ID with mobile compatibility
+    const newCaseId =
+        (window.crypto && window.crypto.randomUUID)
+            ? window.crypto.randomUUID()
+            : "case-" + Date.now() + "-" +
+              Math.random().toString(36).slice(2);
+
+    const newDemoCase = {
+        id: newCaseId,
+        name: caseName,
+        description: caseDescription,
+        visibility: caseVisibility
+    };
+
+    demoCases.push(newDemoCase);
+
+    localStorage.setItem(
+        "geosearch_demo_cases",
+        JSON.stringify(demoCases)
+    );
+
+    displayDemoCases();
+
+    caseForm.reset();
+    closeCaseDialog();
+});
+
+displayDemoCases();
+
+
+
+
+/* =====================================
+   DEMO CASE LOADING AND RESET
+===================================== */
+
+let activeDemoCaseId =
+    localStorage.getItem("geosearch_active_demo_case");
+
+
+function clearCurrentDemoCase() {
+
+    currentOperation = null;
+
+    sectorStatuses = {};
+    sectorAssignments = {};
+
+    gridCells.forEach(cell => geoMap.removeLayer(cell));
+    gridLabels.forEach(label => geoMap.removeLayer(label));
+
+    gridCells = [];
+    gridLabels = [];
+
+    if (searchAreaRectangle) {
+        geoMap.removeLayer(searchAreaRectangle);
+        searchAreaRectangle = null;
+    }
+
+    isSelectingArea = false;
+    areaCorners = [];
+    selectedSector = null;
+
+    sectorDetailsPanel.hidden = true;
+    generateGridButton.disabled = true;
+
+    const gridGuideContainer =
+        document.getElementById("gridGuideContainer");
+
+    gridGuideContainer.innerHTML = "";
+
+    updateDashboardMap();
+}
+
+
+function loadDemoCase(selectedCase) {
+
+    activeDemoCaseId = selectedCase.id;
+
+    localStorage.setItem(
+        "geosearch_active_demo_case",
+        activeDemoCaseId
+    );
+
+    const selectedCaseInfo =
+        document.getElementById("selectedCaseInfo");
+
+    selectedCaseInfo.textContent =
+        "Currently selected: " + selectedCase.name;
+
+    const savedOperation =
+        caseOperations[activeDemoCaseId];
+
+    if (searchAreaRectangle) {
+        geoMap.removeLayer(searchAreaRectangle);
+        searchAreaRectangle = null;
+    }
+
+    // No saved operation for this case
+    if (
+        !savedOperation ||
+        !savedOperation.bounds ||
+        !Array.isArray(savedOperation.cells)
+    ) {
+
+        clearCurrentDemoCase();
+
+        return;
+    }
+
+    // Restore sector data
+    sectorStatuses = {
+        ...(savedOperation.statuses || {})
+    };
+
+    sectorAssignments = {
+        ...(savedOperation.assignments || {})
+    };
+
+    currentOperation = {
+        ...savedOperation,
+        statuses: sectorStatuses,
+        assignments: sectorAssignments
+    };
+
+    // Restore search area
+    const bounds = savedOperation.bounds;
+
+    searchAreaRectangle = L.rectangle(
+        [
+            [Number(bounds.south), Number(bounds.west)],
+            [Number(bounds.north), Number(bounds.east)]
+        ],
+        {
+            color: "#38bdf8",
+            weight: 3,
+            fillColor: "#38bdf8",
+            fillOpacity: 0.15
+        }
+    ).addTo(geoMap);
+
+    generateGridButton.disabled = false;
+
+    // Restore grid and dashboard
+    drawDemoGrid();
+
+    updateGridGuide();
+
+    updateDashboardMap();
+
+    console.log("Opened demo case:", selectedCase.name);
+}
+
+
+/* =====================================
+   DEMO CASE CLICK HANDLER
+===================================== */
+
+caseListContainer.addEventListener("click", function (event) {
+
+    const button = event.target.closest("button");
+
+    if (!button) return;
+
+    const caseId = button.dataset.caseId;
+
+    // DELETE CASE
+    if (button.matches(".delete-case-button")) {
+
+        const confirmed = confirm(
+            "Delete this fictional demo case?"
+        );
+
+        if (!confirmed) return;
+
+        const caseIndex = demoCases.findIndex(
+            demoCase => demoCase.id === caseId
+        );
+
+        if (caseIndex === -1) return;
+
+        demoCases.splice(caseIndex, 1);
+
+        delete caseOperations[caseId];
+
+        localStorage.setItem(
+            "geosearch_demo_cases",
+            JSON.stringify(demoCases)
+        );
+
+        localStorage.setItem(
+            "geosearch_case_operations",
+            JSON.stringify(caseOperations)
+        );
+
+        // Reset if the deleted case was active
+        if (activeDemoCaseId === caseId) {
+
+            activeDemoCaseId = null;
+
+            localStorage.removeItem(
+                "geosearch_active_demo_case"
+            );
+
+            clearCurrentDemoCase();
+
+            document.getElementById(
+                "selectedCaseInfo"
+            ).textContent = "No case selected.";
+        }
+
+        displayDemoCases();
+
+        return;
+    }
+
+    // OPEN CASE
+    if (button.matches(".open-case-button")) {
+
+        const selectedCase = demoCases.find(
+            demoCase => demoCase.id === caseId
+        );
+
+        if (!selectedCase) return;
+
+        // Save previous case before switching
+        if (activeDemoCaseId !== selectedCase.id) {
+            saveActiveDemoCase();
+        }
+
+        loadDemoCase(selectedCase);
+    }
+
+});
+
+
+/* =====================================
+   RESTORE SELECTED DEMO CASE
+===================================== */
+
+const savedCase = demoCases.find(
+    demoCase => demoCase.id === activeDemoCaseId
+);
+
+if (savedCase) {
+
+    loadDemoCase(savedCase);
+
+} else {
+
+    activeDemoCaseId = null;
+
+    localStorage.removeItem(
+        "geosearch_active_demo_case"
+    );
+
+    clearCurrentDemoCase();
+
+    document.getElementById(
+        "selectedCaseInfo"
+    ).textContent = "No case selected.";
+}
+
+
+
+
+/* =====================================
+   GEOSEARCH — MOBILE NAVIGATION
+===================================== */
+
+const mobileMenuButton =
+    document.getElementById("mobileMenuButton");
+
+const mainNavigation =
+    document.getElementById("mainNavigation");
+
+
+function closeMobileMenu() {
+
+    mainNavigation.classList.remove("is-open");
+
+    mobileMenuButton.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    mobileMenuButton.setAttribute(
+        "aria-label",
+        "Open navigation menu"
+    );
+
+}
+
+
+mobileMenuButton.addEventListener("click", function () {
+
+    const isOpen =
+        mainNavigation.classList.toggle("is-open");
+
+    mobileMenuButton.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+    );
+
+    mobileMenuButton.setAttribute(
+        "aria-label",
+        isOpen ? "Close navigation menu" : "Open navigation menu"
+    );
+
+});
+
+
+// Close after selecting a navigation link
+
+mainNavigation.querySelectorAll("a").forEach(link => {
+
+    link.addEventListener("click", closeMobileMenu);
+
+});
+
+
+// Close when clicking outside the menu
+
+document.addEventListener("click", function(event) {
+
+    if (
+        !mainNavigation.contains(event.target) &&
+        !mobileMenuButton.contains(event.target)
+    ) {
+        closeMobileMenu();
+    }
+
+});
+
+
+// Close using Escape
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeMobileMenu();
+    }
+
+});
+
+
+// Reset menu when returning to desktop
+
+window.addEventListener("resize", function() {
+
+    if (window.innerWidth > 600) {
+        closeMobileMenu();
+    }
+
+});
+
+
+
+
+
+/* =====================================
+   GEOSEARCH — SUPABASE AUTHENTICATION
+===================================== */
+
+const authScreen = document.getElementById("authScreen");
+const appShell = document.getElementById("appShell");
+
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const authMessage = document.getElementById("authMessage");
+
+const showSignupButton = document.getElementById("showSignupButton");
+const showLoginButton = document.getElementById("showLoginButton");
+const forgotPasswordButton = document.getElementById("forgotPasswordButton");
+
+function showAuthMessage(message, isError = false) {
+    authMessage.textContent = message;
+    authMessage.style.color = isError ? "#f87171" : "#7dd3fc";
+}
+
+function showLoginScreen() {
+    loginForm.hidden = false;
+    signupForm.hidden = true;
+
+    authTitle.textContent = "Welcome Back";
+    authSubtitle.textContent = "Sign in to access your command centre.";
+
+    showAuthMessage("");
+}
+
+function showSignupScreen() {
+    loginForm.hidden = true;
+    signupForm.hidden = false;
+
+    authTitle.textContent = "Create Account";
+    authSubtitle.textContent = "Register to access GeoSearch.";
+
+    showAuthMessage("");
+}
+
+function showApplication(user) {
+    authScreen.hidden = true;
+    appShell.hidden = false;
+
+    console.log("GeoSearch authenticated:", user.email);
+
+    // Refresh Leaflet maps after revealing the dashboard.
+    setTimeout(() => {
+        if (typeof refreshMapSizes === "function") {
+            refreshMapSizes();
+        }
+    }, 300);
+}
+
+// Switch between login and signup.
+showSignupButton.addEventListener("click", showSignupScreen);
+showLoginButton.addEventListener("click", showLoginScreen);
+
+// LOGIN
+loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    const submitButton = loginForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+
+    showAuthMessage("Signing in...");
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) throw error;
+
+        showAuthMessage("Login successful.");
+
+        if (data.user) {
+            showApplication(data.user);
+        }
+
+    } catch (error) {
+        showAuthMessage(error.message, true);
+    } finally {
+        submitButton.disabled = false;
+    }
+});
+
+// SIGN UP
+signupForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (password !== confirmPassword) {
+        showAuthMessage("Passwords do not match.", true);
+        return;
+    }
+
+    const submitButton = signupForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+
+    showAuthMessage("Creating your account...");
+
+    try {
+        const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password
+});
+
+console.log("SIGNUP RESPONSE:", data);
+console.log("SIGNUP ERROR:", error);
+
+if (error) throw error;
+
+        if (data.session && data.user) {
+            showApplication(data.user);
+        } else {
+            showAuthMessage(
+                "Account created. Check your email to confirm your account, then sign in."
+            );
+            showLoginScreen();
+        }
+
+    } catch (error) {
+        showAuthMessage(error.message, true);
+    } finally {
+        submitButton.disabled = false;
+    }
+});
+
+// FORGOT PASSWORD
+forgotPasswordButton.addEventListener("click", async () => {
+    const email = document.getElementById("loginEmail").value.trim();
+
+    if (!email) {
+        showAuthMessage("Enter your email address first.", true);
+        return;
+    }
+
+    showAuthMessage("Sending password recovery email...");
+
+    try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+
+        if (error) throw error;
+
+        showAuthMessage("If the account exists, a recovery email has been sent.");
+
+    } catch (error) {
+        showAuthMessage(error.message, true);
+    }
+});
+
+// RESTORE EXISTING SESSION
+async function restoreAuthSession() {
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+
+        if (error) throw error;
+
+        if (data.session) {
+            showApplication(data.session.user);
+        } else {
+            authScreen.hidden = false;
+            appShell.hidden = true;
+        }
+
+    } catch (error) {
+        console.error("Session restoration failed:", error);
+        authScreen.hidden = false;
+        appShell.hidden = true;
+        showAuthMessage("Unable to restore session. Please sign in.", true);
+    }
+}
+
+restoreAuthSession();
+
+// LISTEN FOR AUTH CHANGES
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_OUT") {
+        appShell.hidden = true;
+        authScreen.hidden = false;
+        showLoginScreen();
+    }
+
+    if (event === "SIGNED_IN" && session?.user) {
+        showApplication(session.user);
+    }
+});
+
+
+
+
+
+/* GEOSEARCH LOGOUT BUTTON */
+
+const logoutButton = document.getElementById("logoutButton");
+
+logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
+    logoutButton.textContent = "Logging out...";
+
+    try {
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) throw error;
+
+        // The existing SIGNED_OUT listener
+        // will return the user to the login screen.
+
+    } catch (error) {
+        console.error("Logout failed:", error);
+        alert("Unable to log out. Please try again.");
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Log Out";
+    }
+});

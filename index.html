@@ -32,20 +32,125 @@
 
 <body>
 
-<div class="container">
+<!-- AUTHENTICATION SCREEN -->
 
-    <!-- HEADER -->
+<section id="authScreen" class="auth-screen">
 
-    <header class="main-header">
+    <div class="auth-card">
 
-        <div class="brand-section">
-            <div class="brand-icon">G</div>
-
-            <div>
-                <h1>GeoSearch</h1>
-                <p>Search Smarter. Coordinate Better.</p>
-            </div>
+        <div class="auth-brand">
+            <h1>GeoSearch</h1>
+            <p>Search Smarter. Coordinate Better.</p>
+            <span>OPERATIONS ACCESS PORTAL</span>
         </div>
+
+        <div class="auth-heading">
+            <h2 id="authTitle">Welcome Back</h2>
+            <p id="authSubtitle">Sign in to access your command centre.</p>
+        </div>
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+            <label for="loginEmail">Email Address</label>
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="loginPassword">Password</label>
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit">Sign In</button>
+
+            <button type="button" id="showSignupButton" class="auth-secondary">
+                Create an Account
+            </button>
+
+            <button type="button" id="forgotPasswordButton" class="auth-link">
+                Forgot Password?
+            </button>
+
+        </form>
+
+        <!-- SIGNUP FORM -->
+
+        <form id="signupForm" hidden>
+
+            <label for="signupEmail">Email Address</label>
+            <input
+                type="email"
+                id="signupEmail"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="signupPassword">Create Password</label>
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+            >
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm your password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+            >
+
+            <button type="submit">Create Account</button>
+
+            <button type="button" id="showLoginButton" class="auth-secondary">
+                Back to Login
+            </button>
+
+        </form>
+
+        <p id="authMessage" role="status" aria-live="polite"></p>
+
+        <div class="auth-footer">
+            GeoSearch | Secure Operations Access
+        </div>
+
+    </div>
+
+</section>
+
+<!-- MAIN APPLICATION -->
+
+<div class="container" id="appShell" hidden>
+
+    
+<!-- HEADER -->
+
+<header class="main-header">
+
+    <div class="brand-section">
+        <div class="brand-text">
+            <h1>GeoSearch</h1>
+            <p>Search Smarter. Coordinate Better.</p>
+        </div>
+    </div>
+
+    <div class="header-right">
 
         <div class="header-status">
             <span class="status-indicator"></span>
@@ -53,14 +158,51 @@
             <span class="dashboard-live">DEMO MODE</span>
         </div>
 
-    </header>
+        <button
+            id="mobileMenuButton"
+            class="mobile-menu-button"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mainNavigation"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </div>
+
+</header>
+
+<!-- MAIN NAVIGATION -->
+
+<nav
+    id="mainNavigation"
+    class="main-navigation"
+    aria-label="Main navigation"
+>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#cases">Cases</a>
+    <a href="#search">Location Search</a>
+    <a href="#operations">Operations Map</a>
+    <a href="#grid-guide">Grid Guide</a>
+    <button type="button" id="logoutButton" class="logout-button">
+    <span>Log Out</span>
+</button>
+</nav>
+
+<main>
+    <!-- All your existing sections -->
+</main>
+
+<footer class="main-footer">
 
 
-    <main>
 
         <!-- OPERATIONS DASHBOARD -->
 
-        <section class="dashboard-section">
+        <section id="dashboard" class="dashboard-section">
 
             <div class="dashboard-heading">
 
@@ -76,7 +218,6 @@
 
             </div>
 
-
             <!-- OPERATION STATISTICS -->
 
             <div class="dashboard-stats">
@@ -90,7 +231,6 @@
                     <p>Currently active</p>
                 </div>
 
-
                 <div class="dashboard-stat">
                     <div class="stat-label">
                         <span>Total Search Grids</span>
@@ -100,7 +240,6 @@
                     <p>Registered grids</p>
                 </div>
 
-
                 <div class="dashboard-stat">
                     <div class="stat-label">
                         <span>Sectors Completed</span>
@@ -109,7 +248,6 @@
                     <h3 id="completedSectorsCount">0</h3>
                     <p>Coverage completed</p>
                 </div>
-
 
                 <div class="dashboard-stat">
                     <div class="stat-label">
@@ -122,7 +260,6 @@
 
             </div>
 
-
             <!-- MAP CONTROL PANEL -->
 
             <div class="dashboard-map-card">
@@ -132,7 +269,7 @@
                     <div>
                         <span class="section-eyebrow">GEOGRAPHICAL INTELLIGENCE</span>
                         <h3>Live Operations Map</h3>
-                        <p>Visual overview of registered search areas.</p>
+                        <p>Visual overview of registered demonstration areas.</p>
                     </div>
 
                     <div class="map-indicator">
@@ -141,7 +278,6 @@
                     </div>
 
                 </div>
-
 
                 <!-- DEPARTMENT AND STATUS FILTERS -->
 
@@ -163,7 +299,6 @@
 
                     </div>
 
-
                     <div class="filter-group">
 
                         <label for="operationStatusFilter">
@@ -181,15 +316,11 @@
 
                 </div>
 
-
                 <!-- MAIN DASHBOARD MAP -->
 
                 <div class="dashboard-map-container">
-
                     <div id="dashboardMap"></div>
-
                 </div>
-
 
                 <p id="dashboardMessage" role="status" aria-live="polite">
                     Dashboard ready. No operations have been registered yet.
@@ -199,18 +330,94 @@
 
         </section>
 
+        <!-- CASE MANAGEMENT -->
 
+        <section id="cases" class="cases-section">
+
+            <div class="section-heading">
+                <span class="section-eyebrow">OPERATION ORGANISATION</span>
+                <h2>Case Management</h2>
+                <p>Manage your demonstration cases independently.</p>
+            </div>
+
+            <div class="case-actions">
+                <button id="createCaseButton" type="button">
+                    + Create New Case
+                </button>
+            </div>
+
+            <div id="caseList" class="case-list">
+                <p>No cases created yet.</p>
+            </div>
+
+            <div id="selectedCaseInfo" class="selected-case-info">
+    No demo case selected.
+</div>
+
+
+
+<!-- CREATE CASE DIALOG -->
+
+<dialog id="createCaseDialog" class="case-dialog">
+
+    <div class="case-dialog-header">
+        <h3>Create Demo Case</h3>
+        <button id="closeCaseDialog" type="button" aria-label="Close">
+            ×
+        </button>
+    </div>
+
+    <form id="createCaseForm">
+
+        <label for="caseNameInput">Case Name</label>
+        <input
+            type="text"
+            id="caseNameInput"
+            placeholder="Enter demo case name"
+            maxlength="80"
+            required
+        >
+
+        <label for="caseDescriptionInput">Description</label>
+        <textarea
+            id="caseDescriptionInput"
+            placeholder="Describe this fictional demonstration case"
+            maxlength="300"
+            rows="3"
+        ></textarea>
+
+        <label for="caseVisibilityInput">Visibility</label>
+        <select id="caseVisibilityInput">
+            <option value="private">Private Demo</option>
+            <option value="public">Public Demo</option>
+        </select>
+
+        <div class="case-dialog-actions">
+            <button id="cancelCaseButton" type="button">
+                Cancel
+            </button>
+
+            <button type="submit">
+                Create Case
+            </button>
+        </div>
+
+    </form>
+
+</dialog>
+
+
+        </section>
 
         <!-- LOCATION SEARCH -->
 
-        <section class="search-section">
+        <section id="search" class="search-section">
 
             <div class="section-heading">
                 <span class="section-eyebrow">LOCATION INTELLIGENCE</span>
                 <h2>Find a Location</h2>
                 <p>Search for a city, address or geographical location.</p>
             </div>
-
 
             <div class="location-search-controls">
 
@@ -230,11 +437,9 @@
 
         </section>
 
-
-
         <!-- SEARCH AREA MANAGEMENT -->
 
-        <section class="map-section">
+        <section id="operations" class="map-section">
 
             <div class="section-heading">
 
@@ -243,11 +448,10 @@
                 <h2>Search Area Management</h2>
 
                 <p>
-                    Define geographical boundaries and manage individual search sectors.
+                    Define geographical boundaries and manage demonstration sectors.
                 </p>
 
             </div>
-
 
             <!-- GRID CONTROLS -->
 
@@ -263,21 +467,15 @@
 
             </div>
 
-
             <p id="areaMessage">
-                Select the button to begin defining a search area.
+                Select the button to begin defining a demonstration area.
             </p>
-
 
             <!-- INTERACTIVE GRID MAP -->
 
             <div class="operation-map-container">
-
                 <div id="map"></div>
-
             </div>
-
-
 
             <!-- SECTOR DETAILS PANEL -->
 
@@ -302,20 +500,17 @@
 
                 </div>
 
-
                 <label for="sectorStatusSelect">
-                    Search Status
+                    Demonstration Status
                 </label>
 
                 <select id="sectorStatusSelect"></select>
 
-
                 <label for="sectorTeamSelect">
-                    Assigned Team
+                    Assigned Demo Team
                 </label>
 
                 <select id="sectorTeamSelect"></select>
-
 
                 <p id="sectorPanelMessage">
                     Select a sector to view its details.
@@ -324,8 +519,6 @@
             </div>
 
         </section>
-
-
 
         <!-- GRID REFERENCE GUIDE -->
 
@@ -338,7 +531,7 @@
                 <h2>Grid Reference Guide</h2>
 
                 <p>
-                    View geographical sectors and their current search status.
+                    View geographical sectors and their current demonstration status.
                 </p>
 
             </div>
@@ -346,8 +539,6 @@
             <div id="gridGuideContainer"></div>
 
         </section>
-
-
 
         <!-- LOCATION INFORMATION -->
 
@@ -363,13 +554,11 @@
 
             </div>
 
-
             <div class="info-card">
 
                 <h3 id="placeName">
                     No Location Selected
                 </h3>
-
 
                 <div class="location-data-grid">
 
@@ -401,8 +590,6 @@
 
     </main>
 
-
-
     <!-- FOOTER -->
 
     <footer class="main-footer">
@@ -416,8 +603,22 @@
 </div>
 
 
+
+    </main>
+
+    <footer class="main-footer">
+
+        <p>GeoSearch | Search Smarter. Coordinate Better.</p>
+
+        <span>Geographical Search Coordination Platform</span>
+
+    </footer>
+
+</div>
+
 <!-- MAIN JAVASCRIPT -->
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
 </body>

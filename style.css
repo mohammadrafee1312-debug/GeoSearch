@@ -1068,3 +1068,1134 @@ button:disabled {
         animation-duration: 0.01ms !important;
     }
 }
+
+
+
+
+
+
+/* ================================
+   MAIN NAVIGATION
+================================ */
+
+.main-navigation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    margin: 18px 0 28px;
+    background: #0b192a;
+    border: 1px solid rgba(0, 195, 255, 0.15);
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+
+.main-navigation a {
+    color: #a9bfd4;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.25s ease;
+}
+
+.main-navigation a:hover {
+    color: #ffffff;
+    background: rgba(0, 195, 255, 0.12);
+    box-shadow: 0 0 12px rgba(0, 195, 255, 0.12);
+}
+
+/* ================================
+   CASE MANAGEMENT
+================================ */
+
+.cases-section {
+    margin: 35px 0;
+    padding: 25px;
+    background: #0b192a;
+    border: 1px solid rgba(0, 195, 255, 0.18);
+    border-radius: 16px;
+}
+
+.case-actions {
+    margin: 22px 0;
+}
+
+# 【createCaseButton】 {
+    padding: 12px 20px;
+    color: #ffffff;
+    background: #087fce;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+# 【createCaseButton】:hover {
+    background: #079fe8;
+    box-shadow: 0 0 16px rgba(0, 195, 255, 0.3);
+}
+
+.case-list {
+    min-height: 70px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    color: #a9bfd4;
+}
+
+/* MOBILE NAVIGATION */
+
+@media (max-width: 600px) {
+    .main-navigation {
+        gap: 6px;
+        padding: 10px;
+    }
+
+    .main-navigation a {
+        font-size: 12px;
+        padding: 9px 10px;
+    }
+
+    .cases-section {
+        padding: 16px;
+    }
+}
+
+
+
+
+
+/* =====================================
+   GEOSEARCH - MOBILE RESPONSIVENESS
+===================================== */
+
+/* Tablets and smaller laptops */
+@media (max-width: 900px) {
+
+    .container {
+        width: 100%;
+        padding: 0 16px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-map-container,
+    .operation-map-container {
+        width: 100%;
+    }
+
+}
+
+/* Mobile phones */
+@media (max-width: 600px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100%;
+        padding: 0 12px;
+    }
+
+    /* Header */
+
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 18px 0;
+    }
+
+    .header-status {
+        flex-wrap: wrap;
+        font-size: 11px;
+    }
+
+    /* Navigation */
+
+    .main-navigation {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .main-navigation a {
+        text-align: center;
+        font-size: 12px;
+        padding: 11px 6px;
+    }
+
+    /* Headings */
+
+    .dashboard-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .section-heading h2,
+    .dashboard-heading h2 {
+        font-size: 22px;
+    }
+
+    .section-heading p,
+    .dashboard-heading p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* Statistics */
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .dashboard-stat {
+        padding: 14px;
+        min-width: 0;
+    }
+
+    .dashboard-stat h3 {
+        font-size: 24px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    /* Dashboard map */
+
+    .dashboard-map-card {
+        padding: 14px;
+    }
+
+    .dashboard-map-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .dashboard-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-group select {
+        width: 100%;
+    }
+
+    .dashboard-map-container {
+        width: 100%;
+        height: 300px;
+    }
+
+    /* Case management */
+
+    .cases-section {
+        padding: 16px;
+        margin: 24px 0;
+    }
+
+    .case-actions button {
+        width: 100%;
+    }
+
+    /* Location search */
+
+    .location-search-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .location-search-controls input,
+    .location-search-controls button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    /* Main map */
+
+    .map-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .map-controls button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .operation-map-container {
+        width: 100%;
+        height: 350px;
+    }
+
+    /* Sector details */
+
+    .sector-details-panel {
+        width: 100%;
+        padding: 16px;
+    }
+
+    .sector-details-panel select {
+        width: 100%;
+        min-height: 42px;
+    }
+
+    /* Location information */
+
+    .location-data-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .info-card {
+        padding: 16px;
+    }
+
+    /* Footer */
+
+    .main-footer {
+        text-align: center;
+        padding: 20px 10px;
+        line-height: 1.7;
+    }
+
+}
+
+/* Very narrow phones */
+@media (max-width: 360px) {
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .main-navigation {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+
+
+
+
+
+/* CASE CREATION DIALOG */
+
+.case-dialog {
+    width: min(460px, calc(100% - 24px));
+    padding: 24px;
+    color: #eaf4ff;
+    background: #0b192a;
+    border: 1px solid rgba(0, 195, 255, 0.3);
+    border-radius: 16px;
+}
+
+.case-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+}
+
+.case-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.case-dialog-header h3 {
+    margin: 0;
+}
+
+.case-dialog-header button {
+    color: #fff;
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+#createCaseForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#createCaseForm input,
+#createCaseForm textarea,
+#createCaseForm select {
+    width: 100%;
+    padding: 12px;
+    color: #fff;
+    background: #13263b;
+    border: 1px solid #29445f;
+    border-radius: 8px;
+    font: inherit;
+}
+
+#createCaseForm textarea {
+    resize: vertical;
+}
+
+.case-dialog-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.case-dialog-actions button {
+    flex: 1;
+    min-height: 44px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .case-dialog {
+        padding: 18px;
+    }
+
+    .case-dialog-actions {
+        flex-direction: column;
+    }
+}
+
+
+
+
+
+
+
+
+
+/* DEMO CASE CARDS */
+
+.demo-case-card {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: #102238;
+    border: 1px solid rgba(0, 195, 255, 0.2);
+    border-radius: 12px;
+}
+
+.demo-case-card h3 {
+    margin: 0 0 10px;
+    color: #eaf4ff;
+}
+
+.demo-case-card p {
+    color: #a9bfd4;
+    line-height: 1.6;
+}
+
+.case-visibility {
+    display: inline-block;
+    padding: 6px 10px;
+    color: #54d8ff;
+    background: rgba(0, 195, 255, 0.1);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+
+
+
+.delete-case-button {
+    margin-top: 14px;
+    padding: 9px 14px;
+    color: #ffb5b5;
+    background: rgba(255, 70, 70, 0.12);
+    border: 1px solid rgba(255, 70, 70, 0.3);
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.delete-case-button:hover {
+    background: rgba(255, 70, 70, 0.22);
+}
+
+
+
+
+
+
+
+
+/* DELETE DEMO CASE BUTTON */
+
+.delete-case-button {
+    margin-top: 14px;
+    padding: 9px 14px;
+    color: #ffb5b5;
+    background: rgba(255, 70, 70, 0.12);
+    border: 1px solid rgba(255, 70, 70, 0.3);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.delete-case-button:hover {
+    color: #ffffff;
+    background: rgba(255, 70, 70, 0.3);
+}
+
+.delete-case-button:focus-visible {
+    outline: 2px solid #ff7777;
+    outline-offset: 3px;
+}
+
+
+
+
+
+.open-case-button {
+    margin-top: 14px;
+    margin-right: 8px;
+    padding: 9px 14px;
+    color: #ffffff;
+    background: #087fce;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.open-case-button:hover {
+    background: #079fe8;
+    box-shadow: 0 0 12px rgba(0, 195, 255, 0.25);
+}
+
+
+
+
+.selected-case-info {
+    margin-top: 16px;
+    padding: 14px;
+    color: #54d8ff;
+    background: rgba(0, 195, 255, 0.08);
+    border: 1px solid rgba(0, 195, 255, 0.2);
+    border-radius: 9px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+
+
+
+/* =====================================
+   GEOSEARCH — HEADER REDESIGN PHASE 1
+===================================== */
+
+.main-header {
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    overflow: visible;
+    padding: 20px 24px;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.brand-text h1 {
+    margin: 0;
+    color: var(--cyan);
+    font-size: 30px;
+    letter-spacing: 1.5px;
+}
+
+.brand-text p {
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #22c55e;
+}
+
+.mobile-menu-button {
+    display: none;
+    width: 42px;
+    height: 42px;
+    min-height: 42px;
+    padding: 9px;
+    background: #142744;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.mobile-menu-button span {
+    width: 19px;
+    height: 2px;
+    background: var(--cyan);
+    border-radius: 3px;
+}
+
+/* Desktop navigation */
+
+.main-navigation {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px;
+    margin: 0 0 24px;
+    background: #0b192a;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.main-navigation a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 13px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+.main-navigation a:hover {
+    color: white;
+    background: rgba(56, 189, 248, 0.12);
+}
+
+/* Mobile navigation */
+
+@media (max-width: 600px) {
+
+    .main-header {
+        padding: 14px;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .brand-text h1 {
+        font-size: 25px;
+    }
+
+    .brand-text p {
+        font-size: 11px;
+    }
+
+    .header-right {
+        gap: 9px;
+    }
+
+    .header-status {
+        gap: 6px;
+        font-size: 9px;
+    }
+
+    .header-status .dashboard-live {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .main-navigation {
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        gap: 4px;
+        padding: 9px;
+        margin: 0 0 14px;
+        background: #101e35;
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        border-radius: 12px;
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .main-navigation.is-open {
+        display: flex;
+    }
+
+    .main-navigation a {
+        display: block;
+        padding: 13px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+
+}
+
+/* Small phones */
+
+@media (max-width: 360px) {
+
+    .main-header {
+        padding: 12px 9px;
+    }
+
+    .brand-text h1 {
+        font-size: 22px;
+    }
+
+    .brand-text p {
+        font-size: 10px;
+    }
+
+    .header-status {
+        font-size: 8px;
+    }
+
+}
+
+
+
+
+/* =========================================
+   GEOSEARCH - MOBILE RESPONSIVE REFINEMENT
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    /* GENERAL LAYOUT */
+
+    body {
+        padding: 8px;
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    section {
+        padding: 15px;
+        margin-bottom: 16px;
+        border-radius: 14px;
+    }
+
+    /* HEADER */
+
+    .main-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        min-width: 42px;
+        min-height: 42px;
+    }
+
+    /* NAVIGATION */
+
+    .main-navigation {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 6px;
+        padding: 12px;
+    }
+
+    .main-navigation.is-open {
+        display: flex;
+    }
+
+    .main-navigation a {
+        width: 100%;
+        padding: 12px;
+        text-align: left;
+    }
+
+    /* DASHBOARD */
+
+    .dashboard-section {
+        padding: 14px;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .dashboard-filters {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* MAPS */
+
+    .dashboard-map-container {
+        width: 100%;
+        height: 300px;
+        min-height: 300px;
+    }
+
+    #dashboardMap {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+
+    .operation-map-container {
+        width: 100%;
+        height: 400px;
+        min-height: 350px;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+
+    /* CASE MANAGEMENT */
+
+    .demo-case-card {
+        width: 100%;
+        padding: 14px;
+    }
+
+    .demo-case-card button {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .case-dialog {
+        width: calc(100% - 24px);
+        max-width: 450px;
+        margin: auto;
+        padding: 18px;
+    }
+
+    /* BUTTONS AND INPUTS */
+
+    button,
+    select,
+    input {
+        max-width: 100%;
+    }
+
+    button {
+        min-height: 44px;
+    }
+
+    input,
+    select {
+        min-height: 44px;
+    }
+
+    /* GRID GUIDE */
+
+    #gridGuideContainer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .grid-guide-item {
+        min-width: 0;
+        padding: 10px;
+    }
+
+    .grid-guide-item select {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    /* SECTOR PANEL */
+
+    #sectorDetailsPanel {
+        width: 100%;
+        padding: 14px;
+    }
+
+    #sectorDetailsPanel select {
+        width: 100%;
+    }
+
+    /* LOCATION INFORMATION */
+
+    .location-info {
+        overflow-wrap: anywhere;
+    }
+
+    /* FOOTER */
+
+    .main-footer {
+        padding: 14px 8px;
+        text-align: center;
+    }
+}
+
+/* EXTRA SMALL SCREENS */
+
+@media (max-width: 360px) {
+
+    body {
+        padding: 5px;
+    }
+
+    section {
+        padding: 11px;
+    }
+
+    .dashboard-stats {
+        gap: 7px;
+    }
+
+    .dashboard-map-container {
+        height: 260px;
+        min-height: 260px;
+    }
+
+    .operation-map-container {
+        height: 340px;
+        min-height: 340px;
+    }
+
+    #gridGuideContainer {
+        gap: 7px;
+    }
+}
+
+
+
+
+/* =====================================
+   GEOSEARCH — AUTHENTICATION SCREEN
+===================================== */
+
+.auth-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background:
+        radial-gradient(circle at top, rgba(37,99,235,.18), transparent 45%),
+        var(--bg-main);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 35px;
+    background: linear-gradient(145deg, #142744, #091528);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 15px 45px rgba(0,0,0,.4);
+}
+
+.auth-brand {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-brand h1 {
+    color: var(--cyan);
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.auth-brand p {
+    color: var(--text-secondary);
+    margin: 8px 0 15px;
+}
+
+.auth-brand span {
+    color: var(--cyan-light);
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.auth-heading {
+    margin-bottom: 22px;
+}
+
+.auth-heading h2 {
+    margin-bottom: 7px;
+}
+
+.auth-heading p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+#loginForm,
+#signupForm {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+#loginForm label,
+#signupForm label {
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#loginForm input,
+#signupForm input {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px;
+    color: white;
+    background: var(--bg-input);
+    border: 1px solid #334e6d;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#loginForm input:focus,
+#signupForm input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(56,189,248,.12);
+}
+
+#loginForm button,
+#signupForm button {
+    width: 100%;
+    margin-top: 7px;
+}
+
+.auth-secondary {
+    background: #172d4b;
+    border-color: #315071;
+}
+
+.auth-link {
+    background: transparent;
+    border: none;
+    color: var(--cyan-light);
+    min-height: 35px;
+}
+
+#authMessage {
+    min-height: 20px;
+    margin-top: 15px;
+    font-size: 13px;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    color: #8298b1;
+    font-size: 11px;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .auth-screen {
+        padding: 12px;
+    }
+
+    .auth-card {
+        padding: 24px 18px;
+    }
+}
+
+[hidden] {
+    display: none !important;
+}
+
+
+
+
+
+
+
+/* GEOSEARCH LOGOUT BUTTON */
+
+.main-navigation .logout-button {
+    padding: 10px 16px;
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    border-radius: 8px;
+    background: rgba(248, 113, 113, 0.08);
+    color: #fca5a5;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.main-navigation .logout-button:hover {
+    background: rgba(248, 113, 113, 0.18);
+    border-color: #f87171;
+}
+
+@media (max-width: 768px) {
+    .main-navigation .logout-button {
+        width: 100%;
+        text-align: left;
+        margin-top: 8px;
+    }
+}
